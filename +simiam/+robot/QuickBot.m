@@ -188,7 +188,10 @@ classdef QuickBot < simiam.robot.Robot
             
             
             
-            %this will need to change
+            %this will need to change - below is an example of usage
+            %ProximitySensor(parent, 'IR', pose, ir_pose, something to do with the color of the sensor,length,sensor angle, name of file);                                         
+            %ProximitySensor(parent, 'IR', pose, ir_pose, 0.04, 0.3, Pose2D.deg2rad(6), 'simiam.robot.QuickBot.ir_distance_to_raw');
+            
             ir_pose = Pose2D(-0.0474, 0.0534, Pose2D.deg2rad(90));
             obj.ir_array(1) = ProximitySensor(parent, 'IR', pose, ir_pose, 0.04, 0.3, Pose2D.deg2rad(6), 'simiam.robot.QuickBot.ir_distance_to_raw');
             
