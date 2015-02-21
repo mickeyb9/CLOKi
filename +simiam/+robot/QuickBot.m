@@ -2,7 +2,7 @@ classdef QuickBot < simiam.robot.Robot
 
 % Copyright (C) 2013, Georgia Tech Research Corporation
 % see the LICENSE file included with this software
-    
+    %no one will find me
     properties
         wheel_radius
         wheel_base_length
