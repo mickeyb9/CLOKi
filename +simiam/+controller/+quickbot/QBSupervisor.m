@@ -23,7 +23,6 @@ classdef QBSupervisor < simiam.controller.Supervisor
         current_state
 
         prev_ticks          % Previous tick count on the left and right wheels
-        
         v
         theta_d
         goal
@@ -33,7 +32,6 @@ classdef QBSupervisor < simiam.controller.Supervisor
         d_unsafe
         d_fw
         d_prog
-        
         p
         
         v_max_w0            % QuickBot's max linear velocity when w=0
@@ -135,6 +133,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             %% START CODE BLOCK %%
             
             ir_distances = obj.robot.get_ir_distances();
+            camera_distances = obj.robot.get_camera_distances();
             
             if (obj.check_event('at_goal'))
                 if (~obj.is_in_state('stop'))
@@ -239,30 +238,36 @@ classdef QBSupervisor < simiam.controller.Supervisor
         
         function rc = at_obstacle(obj, state, robot)
             ir_distances = obj.robot.get_ir_distances();
+            camera_distances = obj.robot.get_camera_distances();
             rc = false;                                     % Assume initially that the robot is clear of obstacle
             
             % Loop through and test the sensors (only the front set)
-            if any(ir_distances(1:5) < obj.d_at_obs)
+%             if any(ir_distances(1:11) < obj.d_at_obs)
+            if any(ir_distances(1:5) < obj.d_at_obs || camera_distances(1:6) < obj.d_at_obs)
                 rc = true;
             end
         end
         
         function rc = unsafe(obj, state, robot)
-            ir_distances = obj.robot.get_ir_distances();              
+            ir_distances = obj.robot.get_ir_distances();     
+            camera_distances = obj.robot.get_camera_distances();
             rc = false;             % Assume initially that the robot is clear of obstacle
             
             % Loop through and test the sensors (only the front set)
-            if any(ir_distances(1:5) < obj.d_unsafe)
+%             if any(ir_distances(1:11) < obj.d_unsafe)
+            if any(ir_distances(1:5) < obj.d_unsafe || camera_distances(1:6) < obj.d_at_obs)
                     rc = true;
             end
         end
         
         function rc = obstacle_cleared(obj, state, robot)
             ir_distances = obj.robot.get_ir_distances();
+            camera_distances = obj.robot.get_camera_distances();
             rc = false;              % Assume initially that the robot is clear of obstacle
             
             % Loop through and test the sensors (only front set)
-            if all(ir_distances(1:5) > obj.d_at_obs)
+%             if all(ir_distances(1:11) > obj.d_at_obs)
+            if all(ir_distances(1:11) > obj.d_at_obs || camera_distances(1:6) > obj.d_at_obs)
                 rc = true;
             end
         end

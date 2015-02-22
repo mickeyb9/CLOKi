@@ -21,8 +21,7 @@ classdef K3Supervisor < simiam.controller.Supervisor
         eventsd
         
         current_state
-    
-    
+        
         prev_ticks          % Previous tick count on the left and right wheels
         v
         goal

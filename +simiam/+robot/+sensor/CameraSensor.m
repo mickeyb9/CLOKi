@@ -1,4 +1,4 @@
-classdef Camera < simiam.ui.Drawable
+classdef CameraSensor < simiam.ui.Drawable
     
 % Copyright (C) 2013, Georgia Tech Research Corporation
 % see the LICENSE file included with this software
@@ -22,7 +22,7 @@ classdef Camera < simiam.ui.Drawable
     
     methods
         
-        function obj = Camera(parent, type, r_pose, pose, r_min, r_max, phi, varargin)
+        function obj = CameraSensor(parent, type, r_pose, pose, r_min, r_max, phi, varargin)
             obj = obj@simiam.ui.Drawable(parent, r_pose);
             
             obj.type = type;
@@ -49,10 +49,10 @@ classdef Camera < simiam.ui.Drawable
             
             switch(length(varargin))
                 case 0 
-                    obj.map = str2func('simiam.robot.sensor.Camera.identity_map');
+                    obj.map = str2func('simiam.robot.sensor.CameraSensor.identity_map');
                 case 1 
                     if (isa(varargin{1}, 'simiam.robot.sensor.noise.NoiseModel'))
-                        obj.map = str2func('simiam.robot.sensor.Camera.identity_map');
+                        obj.map = str2func('simiam.robot.sensor.CameraSensor.identity_map');
                         obj.noise_model = varargin{1};
                     else
                         obj.map = str2func(varargin{1});
