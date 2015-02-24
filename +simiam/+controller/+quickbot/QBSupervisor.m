@@ -132,11 +132,11 @@ classdef QBSupervisor < simiam.controller.Supervisor
         
             obj.update_odometry();
         
-            inputs = obj.controllers{7}.inputs; 
+ %           inputs = obj.controllers{7}.inputs; 
             inputs.v = obj.v;
             inputs.d_fw = obj.d_fw;
-            inputs.x_g = obj.goal(1);
-            inputs.y_g = obj.goal(2);
+            inputs.x_g = obj.goal(1)
+            inputs.y_g = obj.goal(2)
             
             %testing
 %             obj.robot.get_danger()
@@ -146,8 +146,8 @@ classdef QBSupervisor < simiam.controller.Supervisor
             ir_distances = obj.robot.get_ir_distances();
             camera_distances = obj.robot.get_camera_distances();
             
-            %dangers = obj.robot.am_i_in_danger();    %returns array of bool from ea camera
-            dangers = [0;1;0;0;0];
+            dangers = obj.robot.get_danger();    %returns array of bool from ea camera
+            %dangers = [0;1;0;0;0];
             
             if (obj.check_event('at_goal') && ~any(dangers)) %at goal and safe
                 if (~obj.is_in_state('stop'))
@@ -509,12 +509,14 @@ classdef QBSupervisor < simiam.controller.Supervisor
             theta = atan2(u_dangers(2),u_dangers(1));
             
             %set carrot for runaway
-            x_n = x+0.25*cos(theta)
-            y_n = y+0.25*sin(theta)
+            x_n = x+0.25*cos(theta);
+            y_n = y+0.25*sin(theta);
             
             %assign to the inputs array variables 
-            inputs.x_g = x_n;
-            inputs.y_g = y_n;
+            inputs.x_g = -x_n;
+            obj.goal(1) = -x_n;
+            inputs.y_g = -y_n;
+            obj.goal(2) = -y_n;
         end
         
         %Create Transformation matrix for moving between WorldFrame and
@@ -539,7 +541,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
 
                 obj.camera_placement = zeros(3,nSensors);
                 for i=1:nSensors
-                    [x, y, theta] = robot.ir_array(i).location.unpack(); 
+                    [x, y, theta] = robot.camera_array(i).location.unpack(); 
                     obj.camera_placement(:,i) = [x; y; theta];
                 end
                 
