@@ -22,7 +22,8 @@ classdef QBSupervisor < simiam.controller.Supervisor
         
         current_state
 
-        prev_ticks          % Previous tick count on the left and right wheels
+        prev_ticks          % BLAH Previous tick count on the left and right wheels
+        
         v
         theta_d
         goal
@@ -40,8 +41,14 @@ classdef QBSupervisor < simiam.controller.Supervisor
         w_min_v0
         
         switch_count
+
         
-        fw_direction
+        fw_direction%hello
+        
+        % sensor geometry
+        calibrated
+        camera_placement
+        ir_placement
     end
     
     methods
@@ -105,6 +112,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             
             obj.d_fw        = 0.15;
             obj.fw_direction   = 'left';
+            obj.calibrated = false; 
             %% END CODE BLOCK %%
                                     
             obj.p = simiam.util.Plotter();
@@ -138,7 +146,10 @@ classdef QBSupervisor < simiam.controller.Supervisor
             ir_distances = obj.robot.get_ir_distances();
             camera_distances = obj.robot.get_camera_distances();
             
-            if (obj.check_event('at_goal'))
+            %dangers = obj.robot.am_i_in_danger();    %returns array of bool from ea camera
+            dangers = [0;1;0;0;0];
+            
+            if (obj.check_event('at_goal') && ~any(dangers)) %at goal and safe
                 if (~obj.is_in_state('stop'))
                     [x,y,theta] = obj.state_estimate.unpack();
                     fprintf('stopped at (%0.3f,%0.3f)\n', x, y);
@@ -149,8 +160,17 @@ classdef QBSupervisor < simiam.controller.Supervisor
             end
             
             %% END CODE BLOCK %%
+           
+             inputs.direction = obj.fw_direction;
             
-            inputs.direction = obj.fw_direction;
+            if (any(dangers))                       %if see any danger
+                % Compute the placement of the sensors
+                if(~obj.calibrated)
+                    obj.set_sensor_geometry(obj.robot);
+                end
+                obj.SetRunAwayGoal(dangers, obj.state_estimate); %set run away goal 
+            end
+            
             outputs = obj.current_controller.execute(obj.robot, obj.state_estimate, inputs, dt);
                 
             [vel_r, vel_l] = obj.ensure_w(obj.robot, outputs.v, outputs.w);
@@ -455,5 +475,75 @@ classdef QBSupervisor < simiam.controller.Supervisor
             [v_0, obj.w_min_v0] = robot.dynamics.diff_to_uni(obj.robot.min_vel, -obj.robot.min_vel);
             [obj.v_min_w0, w_0] = robot.dynamics.diff_to_uni(obj.robot.min_vel, obj.robot.min_vel);
         end
+        
+     %  Set a goal opposite from the direction it sees dangers by using the
+     %  sensor locations and which sensors saw data.  
+        function SetRunAwayGoal(obj, dangers, state_estimate)
+                    
+            % 1. Apply the transformation to robot frame.
+            nSensors = numel(dangers);
+            
+            dangers_rf = zeros(3,nSensors);
+            for i=1:nSensors
+                x_s = obj.camera_placement(1,i);
+                y_s = obj.camera_placement(2,i);
+                theta_s = obj.camera_placement(3,i);
+                
+                R = obj.get_transformation_matrix(x_s,y_s,theta_s);
+                dangers_rf(:,i) = R*[dangers(i); 0; dangers(i)];
+            end
+            
+            % 2. Apply the transformation to world frame.
+            
+            [x,y,theta] = state_estimate.unpack();
+            
+            R = obj.get_transformation_matrix(x,y,theta);
+            dangers_wf = R*dangers_rf;
+            
+            dangers_wf = dangers_wf(1:2,:);    %just x,y
+            
+            %create run away vector
+            u_i = (dangers_wf-repmat([x;y],1,nSensors));
+            u_dangers = sum(u_i,2);
+            
+            theta = atan2(u_dangers(2),u_dangers(1));
+            
+            %set carrot for runaway
+            x_n = x+0.25*cos(theta)
+            y_n = y+0.25*sin(theta)
+            
+            %assign to the inputs array variables 
+            inputs.x_g = x_n;
+            inputs.y_g = y_n;
+        end
+        
+        %Create Transformation matrix for moving between WorldFrame and
+        %RobotFrame
+        function R = get_transformation_matrix(obj, x, y, theta)
+            R = [cos(theta) -sin(theta) x; sin(theta) cos(theta) y; 0 0 1];
+        end
+        
+        %Tells supervisor where the sensors are located on QB
+        function set_sensor_geometry(obj, robot)
+                %ir_placement
+                nSensors = numel(robot.ir_array);  
+
+                obj.camera_placement = zeros(3,nSensors); %change to ir_placement
+                for i=1:nSensors
+                    [x, y, theta] = robot.ir_array(i).location.unpack(); 
+                    obj.ir_placement(:,i) = [x; y; theta];
+                end
+                
+                %camera_placement
+%                 nSensors = numel(robot.camera_array);  
+% 
+%                 obj.camera_placement = zeros(3,nSensors);
+%                 for i=1:nSensors
+%                     [x, y, theta] = robot.ir_array(i).location.unpack(); 
+%                     obj.camera_placement(:,i) = [x; y; theta];
+%                 end
+                
+                obj.calibrated = true;
+         end
     end
 end
