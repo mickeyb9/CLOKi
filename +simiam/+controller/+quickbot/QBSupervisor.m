@@ -528,20 +528,20 @@ classdef QBSupervisor < simiam.controller.Supervisor
                 %ir_placement
                 nSensors = numel(robot.ir_array);  
 
-                obj.camera_placement = zeros(3,nSensors); %change to ir_placement
+                obj.ir_placement = zeros(3,nSensors); 
                 for i=1:nSensors
                     [x, y, theta] = robot.ir_array(i).location.unpack(); 
                     obj.ir_placement(:,i) = [x; y; theta];
                 end
                 
                 %camera_placement
-%                 nSensors = numel(robot.camera_array);  
-% 
-%                 obj.camera_placement = zeros(3,nSensors);
-%                 for i=1:nSensors
-%                     [x, y, theta] = robot.ir_array(i).location.unpack(); 
-%                     obj.camera_placement(:,i) = [x; y; theta];
-%                 end
+                nSensors = numel(robot.camera_array);  
+
+                obj.camera_placement = zeros(3,nSensors);
+                for i=1:nSensors
+                    [x, y, theta] = robot.ir_array(i).location.unpack(); 
+                    obj.camera_placement(:,i) = [x; y; theta];
+                end
                 
                 obj.calibrated = true;
          end
