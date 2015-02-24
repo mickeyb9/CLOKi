@@ -10,6 +10,7 @@ classdef CameraSensor < simiam.ui.Drawable
         max_range   % maximum range of proximity sensor
         spread      % view angle of proximity sensor
         location    % placement location on robot
+        danger      % true if human is visible
         
         map         % if sensor is not natively [m], convert to [raw]
         
@@ -27,6 +28,7 @@ classdef CameraSensor < simiam.ui.Drawable
             
             obj.type = type;
             obj.location = pose;
+            obj.danger = 0; %false, not in danger
             
             T = obj.location.get_transformation_matrix();
             r = r_max;
@@ -86,7 +88,7 @@ classdef CameraSensor < simiam.ui.Drawable
             surface = obj.surfaces.head_.key_;
 %             surface.geometry_ = sensor_cone*T';
             surface.update_geometry(camera_cone*T');
-            if (distance < obj.max_range)
+            if (distance < obj.max_range && obj.danger == 1)
                 set(surface.handle_, 'EdgeColor', 'r');
                 set(surface.handle_, 'FaceColor', [1 0.8 0.8]);
             else

@@ -23,6 +23,7 @@ classdef Physics < handle
             
 %             tstart = tic;
             obj.proximity_sensor_detection();
+            obj.camera_sensor_detection();
 %             telapsed = toc(tstart);
 %             fprintf('proximity_sensor_detect(): %0.3fs\n', telapsed);
         end
@@ -128,11 +129,79 @@ classdef Physics < handle
 %                 token_k = token_k.next_;
             end
         end
+        function camera_sensor_detection(obj)
+%             token_k = obj.world.robots.head_();
+            nRobots = length(obj.world.robots);
+            for k = 1%:nRobots
+%             while (~isempty(token_k))
+%                 robot = token_k.key_.robot;
+                robot = obj.world.robots.elementAt(k).robot;
+                for i = 1:length(robot.camera_array)
+                    camera = robot.camera_array(i);
+                    body_camera_s = camera.surfaces.head_.key_;
+                    d_min = camera.max_range;
+                    camera.update_range(d_min);
+
+                    % check against obstacles
+                    token_l = obj.world.obstacles.head_;
+                    while (~isempty(token_l))
+                        obstacle = token_l.key_.obstacle;
+                        body_o_s = obstacle.surfaces.head_.key_;
+                        
+                        if(body_camera_s.precheck_surface(body_o_s))
+                            d_min = obj.update_camera_sensor(camera, body_camera_s, body_o_s, d_min);
+                        end
+                        token_l = token_l.next_;
+                    end
+                    camera.update_range(d_min); % checking against other robots
+                    
+
+                    % check against other robots
+%                     token_l = obj.world.robots.head_;
+%                     while (~isempty(token_l))
+                    camera.danger = 0;
+                    for l = 1:nRobots
+%                         robot_o = token_l.key_.robot;
+                        robot_o = obj.world.robots.elementAt(l).robot;
+                        if(robot_o ~= robot)
+                            body_o_s = robot_o.surfaces.head_.key_;
+                            
+                            if(body_camera_s.precheck_surface(body_o_s))
+                                d = obj.update_camera_sensor(camera, body_camera_s, body_o_s, d_min);
+                                if (d < d_min)
+                                    d_min = d;
+                                    camera.danger = 1;
+                                end
+                            end
+                        end
+%                         token_l = token_l.next_;
+                    end
+                    
+                    if(d_min < camera.max_range)
+                        camera.update_range(d_min);
+                    end
+                end
+%                 token_k = token_k.next_;
+            end
+        end
     end
         
     methods (Access = private)
 
         function d_min = update_proximity_sensor(obj, sensor, sensor_surface, obstacle_surface, d_min)
+            pts = sensor_surface.intersection_with_surface(obstacle_surface, false);
+            n = size(pts,1);
+            for k = 1:n
+                pt = pts(k,:);
+%                 d = norm(pt-sensor_surface.geometry_(1,1:2));
+                d = sqrt((pt(1)-sensor_surface.geometry_(1,1))^2+(pt(2)-sensor_surface.geometry_(1,2))^2);
+                d = sensor.limit_to_sensor(d);
+                if (d < d_min)
+                    d_min = d;
+                end
+            end
+        end
+        function d_min = update_camera_sensor(obj, sensor, sensor_surface, obstacle_surface, d_min)
             pts = sensor_surface.intersection_with_surface(obstacle_surface, false);
             n = size(pts,1);
             for k = 1:n
