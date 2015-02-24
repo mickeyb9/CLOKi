@@ -41,6 +41,7 @@ for i = 1:2
     
     %re-start
     app.simulator_.start();
+    
     %detect collision or game ender
     pause(1);
     
@@ -49,6 +50,7 @@ for i = 1:2
     clockyFinaly(i) = app.simulator_.world.robots.elementAt(1).pose.y
     humanFinalx(i) = app.simulator_.world.robots.elementAt(2).pose.x
     humanFinaly(i) = app.simulator_.world.robots.elementAt(2).pose.y
+    finalTime(i) = 0.05*get(app.simulator_.clock, 'TasksExecuted')
     
     %go to 'home'
     app.ui_button_home([],[]);
