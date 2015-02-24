@@ -130,6 +130,9 @@ classdef QBSupervisor < simiam.controller.Supervisor
             inputs.x_g = obj.goal(1);
             inputs.y_g = obj.goal(2);
             
+            %testing
+%             obj.robot.get_danger()
+            
             %% START CODE BLOCK %%
             
             ir_distances = obj.robot.get_ir_distances();

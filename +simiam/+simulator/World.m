@@ -2,6 +2,10 @@ classdef World < handle
     
 % Copyright (C) 2013, Georgia Tech Research Corporation
 % see the LICENSE file included with this software
+% 
+% creates robots and obstacles by placing them into linked lists. This file
+% won't be called once the program is running. It's only to create
+% everything.
 
     properties
         robots

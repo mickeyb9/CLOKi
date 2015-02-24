@@ -129,6 +129,7 @@ classdef Physics < handle
 %                 token_k = token_k.next_;
             end
         end
+
         function camera_sensor_detection(obj)
 %             token_k = obj.world.robots.head_();
             nRobots = length(obj.world.robots);

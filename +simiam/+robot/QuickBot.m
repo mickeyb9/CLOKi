@@ -259,6 +259,13 @@ classdef QuickBot < simiam.robot.Robot
             camera_distances = 0.02-log(camera_array_values/3960)/30;
         end
         
+        function dangers = get_danger(obj)
+            dangers = zeros(length(obj.camera_array),1);
+            for i = 1:length(obj.camera_array)
+                dangers(i) = obj.camera_array(i).danger;
+            end
+        end
+        
         % Hardware connectivty related functions
         function add_hardware_link(obj, hostname, port)
             obj.driver = simiam.robot.driver.QuickBotDriver(hostname, port);

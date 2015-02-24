@@ -88,6 +88,7 @@ classdef CameraSensor < simiam.ui.Drawable
             surface = obj.surfaces.head_.key_;
 %             surface.geometry_ = sensor_cone*T';
             surface.update_geometry(camera_cone*T');
+            
             if (distance < obj.max_range && obj.danger == 1)
                 set(surface.handle_, 'EdgeColor', 'r');
                 set(surface.handle_, 'FaceColor', [1 0.8 0.8]);
