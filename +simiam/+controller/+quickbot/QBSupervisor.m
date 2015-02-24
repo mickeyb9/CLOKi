@@ -143,7 +143,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             
             ir_distances = obj.robot.get_ir_distances();
             
-            %dangers = obj.robot.am_i_in_danger();    %returns array of bool from ea camera
+            %dangers = obj.robot.get_danger();    %returns array of bool from ea camera
             dangers = [0;1;0;0;0];
             
             if (obj.check_event('at_goal') && ~any(dangers)) %at goal and safe
@@ -165,6 +165,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
                 if(~obj.calibrated)
                     obj.set_sensor_geometry(obj.robot);
                 end
+                %*****NORM Distribution of WHEN random dir*****
                 obj.SetRunAwayGoal(dangers, obj.state_estimate); %set run away goal 
             end
             
