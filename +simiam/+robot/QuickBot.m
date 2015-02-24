@@ -12,7 +12,7 @@ classdef QuickBot < simiam.robot.Robot
         
         encoders = simiam.robot.sensor.WheelEncoder.empty(1,0);
         ir_array = simiam.robot.sensor.ProximitySensor.empty(1,0);
-        %camera_array = simiam.robot.sensor.Camera.empty(1,0);
+        camera_array = simiam.robot.sensor.CameraSensor.empty(1,0);
         
         dynamics
         prev_ticks
