@@ -94,7 +94,7 @@ classdef CameraSensor < simiam.ui.Drawable
                 set(surface.handle_, 'FaceColor', [1 0.8 0.8]);
             else
                 set(surface.handle_, 'EdgeColor', 'b')
-                set(surface.handle_, 'FaceColor', [0.8 0.8 1]);
+                set(surface.handle_, 'FaceColor', [0 1 1]);
             end
             obj.draw_surfaces();
         end
