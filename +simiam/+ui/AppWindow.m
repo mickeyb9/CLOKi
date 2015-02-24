@@ -70,8 +70,6 @@ classdef AppWindow < handle
         
         function load_ui(obj)
             obj.create_layout();
-            %will automatically start the program
-            obj.ui_button_start([],[]);
         end
         
         function create_simulator(obj, settings_file)

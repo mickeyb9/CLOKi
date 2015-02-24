@@ -135,8 +135,8 @@ classdef QBSupervisor < simiam.controller.Supervisor
  %           inputs = obj.controllers{7}.inputs; 
             inputs.v = obj.v;
             inputs.d_fw = obj.d_fw;
-            inputs.x_g = obj.goal(1)
-            inputs.y_g = obj.goal(2)
+            inputs.x_g = obj.goal(1);
+            inputs.y_g = obj.goal(2);
             
             %testing
 %             obj.robot.get_danger()
