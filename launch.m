@@ -25,11 +25,11 @@ app.load_ui();
 %loop
 for i = 1:2
     %swap out .xml map for initial conditions 
-    
+    settings_file = strcat('settings', num2str(i), '.xml');
     
     %run the program
-    app.ui_button_start([],[]); %this loads simulator & does inital conditions
-    for i=1:10
+    app.ui_button_start([],[], settings_file); %this loads simulator & does inital conditions
+    for z=1:10
         app.ui_button_zoom_out([],[]);
     end
     app.simulator_.stop();
@@ -45,13 +45,16 @@ for i = 1:2
     pause(1);
     
     %save variables
-    app.simulator_.world.robots.elementAt(1).pose
-    app.simulator_.world.robots.elementAt(2).pose
+    clockyFinalx(i) = app.simulator_.world.robots.elementAt(1).pose.x
+    clockyFinaly(i) = app.simulator_.world.robots.elementAt(1).pose.y
+    humanFinalx(i) = app.simulator_.world.robots.elementAt(2).pose.x
+    humanFinaly(i) = app.simulator_.world.robots.elementAt(2).pose.y
     
     %go to 'home'
     app.ui_button_home([],[]);
 end
-
 %plot what we've learned
+figure(1)
+scatter(clockyFinalx, clockyFinaly)
 
 end
