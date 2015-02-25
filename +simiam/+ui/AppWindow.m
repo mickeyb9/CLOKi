@@ -72,6 +72,10 @@ classdef AppWindow < handle
             obj.create_layout();
             %will automatically start the program
             obj.ui_button_start([],[]);
+            %and zoom out
+            for i = 1:10
+                obj.ui_button_zoom_out([],[]);
+            end
         end
         
         function create_simulator(obj, settings_file)
