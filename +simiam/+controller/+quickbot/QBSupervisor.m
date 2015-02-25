@@ -27,6 +27,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
         v
         theta_d
         goal
+        percent_random      %between 0 and 1
         
         d_stop
         d_at_obs
@@ -109,6 +110,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             obj.d_stop      = 0.05;
             obj.d_at_obs    = 0.10;                
             obj.d_unsafe    = 0.05;
+            obj.percent_random = 0;
             
             obj.d_fw        = 0.15;
             obj.fw_direction   = 'left';
@@ -546,6 +548,11 @@ classdef QBSupervisor < simiam.controller.Supervisor
                 end
                 
                 obj.calibrated = true;
-         end
+        end
+         
+        function set_percent_random(obj, input)
+            obj.percent_random = input;
+        end
+         
     end
 end
