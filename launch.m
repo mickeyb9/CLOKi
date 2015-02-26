@@ -61,6 +61,9 @@ for i = 1:2
     humanFinaly(i) = app.simulator_.world.robots.elementAt(2).pose.y;
     finalTime(i) = 0.05*get(app.simulator_.clock, 'TasksExecuted');
     
+    clockyPath(:,:,i) = app.simulator_.clockyRec;
+    humanPath(:,:,i) = app.simulator_.humanRec;
+    
     %go to 'home'
     app.ui_button_home([],[]);
 end
@@ -70,6 +73,8 @@ putvar(clockyFinaly);
 putvar(humanFinalx);
 putvar(humanFinaly);
 putvar(finalTime);
+putvar(humanPath);
+putvar(clockyPath);
 
 %% plot
 
@@ -80,4 +85,26 @@ hold on
 scatter(humanFinalx, humanFinaly)
 legend('clocky', 'human')
 
+%% something special for the paths
+figure(2)
+for i = 1:length(clockyPath(1,1,:))
+    
+    %identify what/'s of current interest
+    cx = clockyPath(:,1,i);
+    cy = clockyPath(:,2,i);
+    hx = humanPath(:,1,i);
+    hy = humanPath(:,2,i);
+    
+    %cut off trailing zeros
+    cx = cx(1:find(cx,1,'last'));
+    cy = cy(1:find(cy,1,'last'));
+    hx = hx(1:find(hx,1,'last'));
+    hy = hy(1:find(hy,1,'last'));
+    
+    %plot, points represent finish points
+    plot(cx, cy, hx, hy, 'LineWidth', 2)
+    hold on
+    scatter(clockyFinalx, clockyFinaly)
+    scatter(humanFinalx, humanFinaly)
+end
 end
