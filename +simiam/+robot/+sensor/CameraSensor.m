@@ -40,7 +40,7 @@ classdef CameraSensor < simiam.ui.Drawable
                                           r     0   1;
                              sqrt(r^2-r1^2)   -r1   1;
                              sqrt(r^2-r2^2)   -r2   1];
-            obj.add_surface(camera_cone*T', [ 0.8 0.8 1 ]);
+            obj.add_surface(camera_cone*T', [ 0.8 0.8 1 ], 0);
             set(obj.surfaces.head_.key_.handle_, 'EdgeColor', 'b');
             
             obj.range = r;

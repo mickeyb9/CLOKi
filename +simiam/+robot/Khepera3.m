@@ -35,6 +35,17 @@ classdef Khepera3 < simiam.robot.Robot
                               0.057       0    1;
                               0.052   0.021    1;
                               0.033   0.043    1];
+           
+           % this is going to be the 'catch circle'
+           % once drawn it will behave like a normal collision.
+           % that will be a problem with normal objects.
+           pts = 36;
+           R = .2;
+           k3_catch_circle = zeros(pts, 3);
+                          
+           for i = 1:pts               
+                k3_catch_circle(i,:) = [R*cos(i/pts*2*pi), R*sin(i/pts*2*pi), 1];
+           end
                           
            k3_base =  [ -0.025   0.063    1;
                          0.030   0.063    1;
@@ -49,8 +60,9 @@ classdef Khepera3 < simiam.robot.Robot
                         -0.052   0.010    1;
                         -0.044   0.043    1];
             
-            obj.add_surface(k3_base, [ 0.8 0.8 0.8 ]);
-            obj.add_surface(k3_top_plate, [ 0.0 0.0 0.0 ]);
+            obj.add_surface(k3_catch_circle, [ 1 1 0 ], 1);
+            obj.add_surface(k3_base, [ 0.8 0.8 0.8 ], 0);
+            obj.add_surface(k3_top_plate, [ 0.0 0.0 0.0 ], 0);
             
             % Add sensors: wheel encoders and IR proximity sensors
             obj.wheel_radius = 0.0205;              % 41mm

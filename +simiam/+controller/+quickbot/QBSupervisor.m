@@ -135,9 +135,9 @@ classdef QBSupervisor < simiam.controller.Supervisor
  %           inputs = obj.controllers{7}.inputs; 
             inputs.v = obj.v;
             inputs.d_fw = obj.d_fw;
-            inputs.x_g = obj.goal(1)
-            inputs.y_g = obj.goal(2)
-            putvar(obj);
+            inputs.x_g = obj.goal(1);
+            inputs.y_g = obj.goal(2);
+            
             %testing
 %             obj.robot.get_danger()
             
@@ -147,7 +147,6 @@ classdef QBSupervisor < simiam.controller.Supervisor
             camera_distances = obj.robot.get_camera_distances();
             
             dangers = obj.robot.get_danger();    %returns array of bool from ea camera
-            putvar(dangers);
             %dangers = [0;1;0;0;0];
             
             if (obj.check_event('at_goal') && ~any(dangers)) %at goal and safe
@@ -493,7 +492,6 @@ classdef QBSupervisor < simiam.controller.Supervisor
                 R = obj.get_transformation_matrix(x_s,y_s,theta_s);
                 dangers_rf(:,i) = R*[dangers(i); 0; dangers(i)];
             end
-            putvar(dangers_rf);
             % 2. Apply the transformation to world frame.
             
             [x,y,theta] = state_estimate.unpack();
@@ -502,18 +500,13 @@ classdef QBSupervisor < simiam.controller.Supervisor
             dangers_wf = R*dangers_rf;
             
             dangers_wf = dangers_wf(1:2,:);    %just x,y
-            putvar(dangers_wf);
             %create run away vector
             u_i = (dangers_wf-repmat([x;y],1,nSensors));
             u_dangers = sum(u_i,2);
-            putvar(u_dangers);
             theta = atan2(u_dangers(2),u_dangers(1))+(180*pi/180);
-            putvar(theta);
             %set carrot for runaway
             x_n = x+0.25*cos(theta);
             y_n = y+0.25*sin(theta);
-            putvar(x_n);
-            putvar(y_n);
             %assign to the inputs array variables 
             inputs.x_g = x_n;
             obj.goal(1) = x_n;

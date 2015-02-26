@@ -22,11 +22,11 @@ classdef Drawable < handle
     
     methods (Access = protected)
         
-        function surface = add_surface(obj, geometry, color)
-            surface = obj.add_surface_with_depth(geometry, color, 1);
+        function surface = add_surface(obj, geometry, color, isCatchCircle)
+            surface = obj.add_surface_with_depth(geometry, color, 1, isCatchCircle);
         end
         
-        function surface = add_surface_with_depth(obj, geometry, color, depth)
+        function surface = add_surface_with_depth(obj, geometry, color, depth, isCatchCircle)
             surface_g = geometry;
             T = obj.pose.get_transformation_matrix();
             geometry_t = geometry*T';
@@ -39,6 +39,7 @@ classdef Drawable < handle
             surface = simiam.ui.Surface2D(surface_h, surface_g);
             surface.set_surface_depth(depth);
             surface.transform_surface(T);
+            surface.set_catch_circle(isCatchCircle);
             obj.surfaces.append_key(surface);
         end
         
