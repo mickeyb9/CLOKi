@@ -23,7 +23,7 @@ app = simiam.ui.AppWindow(root_path, 'launcher');
    
 app.load_ui();
 %loop
-for i = 1
+for i = 1:2
     %swap out .xml map for initial conditions 
     settings_file = strcat('settings', num2str(i), '.xml');
     
@@ -33,31 +33,46 @@ for i = 1
         app.ui_button_zoom_out([],[]);
     end
     app.simulator_.stop();
-    %do something to change variables. You'll have access to pretty much
-    %anything you want since it's all been created 
-    app.simulator_.world.robots.elementAt(1).supervisor.set_percent_random(.1) %this works.
-    app.simulator_.world.robots.elementAt(1).supervisor
-    app.simulator_.world.robots.elementAt(1).robot.dynamics
-    app.simulator_.world.robots.elementAt(2).pose
     
-    %re-start
+    %% do something to change variables. You'll have access to pretty much
+    %  anything you want since it's all been created 
+    
+    % set clocky's percent randomness
+    app.simulator_.world.robots.elementAt(1).supervisor.set_percent_random(.1);
+    
+    % set clockys sensor gains
+    gains = [1 1 1 1 1];
+    app.simulator_.world.robots.elementAt(1).supervisor.controllers{5}.set_sensor_gains(gains);
+    
+    
+%     app.simulator_.world.robots.elementAt(1).robot.dynamics
+%     app.simulator_.world.robots.elementAt(2).pose
+    
+    %% re-start simulation
     app.simulator_.start();
     
     %detect collision or game ender
     pause(1);
     
     %save variables
-%     clockyFinalx(i) = app.simulator_.world.robots.elementAt(1).pose.x
-%     clockyFinaly(i) = app.simulator_.world.robots.elementAt(1).pose.y
-%     humanFinalx(i) = app.simulator_.world.robots.elementAt(2).pose.x
-%     humanFinaly(i) = app.simulator_.world.robots.elementAt(2).pose.y
-    finalTime(i) = 0.05*get(app.simulator_.clock, 'TasksExecuted')
+    clockyFinalx(i) = app.simulator_.world.robots.elementAt(1).pose.x;
+    clockyFinaly(i) = app.simulator_.world.robots.elementAt(1).pose.y;
+    humanFinalx(i) = app.simulator_.world.robots.elementAt(2).pose.x;
+    humanFinaly(i) = app.simulator_.world.robots.elementAt(2).pose.y;
+    finalTime(i) = 0.05*get(app.simulator_.clock, 'TasksExecuted');
     
     %go to 'home'
     app.ui_button_home([],[]);
 end
-%plot what we've learned
-% figure(1)
-% scatter(clockyFinalx, clockyFinaly)
+%% plot what we've learned
+% putvar(clockyFinalx);
+% putvar(clockyFinaly);
+% putvar(humanFinalx);
+% putvar(humanFinaly);
+% putvar(finalTime);
+
+close all
+figure(1)
+scatter(clockyFinalx, clockyFinaly, humanFinalx, humanFinaly)
 
 end

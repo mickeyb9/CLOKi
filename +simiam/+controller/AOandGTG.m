@@ -13,6 +13,7 @@ classdef AOandGTG < simiam.controller.Controller
         Kp
         Ki
         Kd
+        sensor_gains5 = [1 1 0.5 1 1];
         
         % plot support     
         p
@@ -65,7 +66,7 @@ classdef AOandGTG < simiam.controller.Controller
 %             sensor_gains = [1 1 0.5 1 1];
             if (nSensors == 5)
                 % QuickBot
-                sensor_gains = [1 1 0.5 1 1];
+                sensor_gains = obj.sensor_gains5;
             elseif (nSensors == 9)
                 % Khepera3
                 sensor_gains = ones(1,nSensors);
@@ -158,6 +159,13 @@ classdef AOandGTG < simiam.controller.Controller
             % Reset accumulated and previous error
             obj.E_k = 0;
             obj.e_k_1 = 0;
+        end
+        
+        function output = set_sensor_gains(obj, newGains)
+            if length(newGains) == 5
+                obj.sensor_gains5 = newGains;
+            end
+            output = obj.sensor_gains5;
         end
         
     end
