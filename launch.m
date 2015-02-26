@@ -64,15 +64,20 @@ for i = 1:2
     %go to 'home'
     app.ui_button_home([],[]);
 end
-%% plot what we've learned
-% putvar(clockyFinalx);
-% putvar(clockyFinaly);
-% putvar(humanFinalx);
-% putvar(humanFinaly);
-% putvar(finalTime);
+%% export to workspace
+putvar(clockyFinalx);
+putvar(clockyFinaly);
+putvar(humanFinalx);
+putvar(humanFinaly);
+putvar(finalTime);
+
+%% plot
 
 close all
 figure(1)
-scatter(clockyFinalx, clockyFinaly, humanFinalx, humanFinaly)
+scatter(clockyFinalx, clockyFinaly)
+hold on
+scatter(humanFinalx, humanFinaly)
+legend('clocky', 'human')
 
 end
