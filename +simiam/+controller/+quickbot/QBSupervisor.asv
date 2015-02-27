@@ -512,7 +512,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             %set carrot for runaway
             x_n = x+0.25*cos(theta);
             y_n = y+0.25*sin(theta);
-%             fprintf('NOT Random theta = %f\n', theta);
+            fprintf('NOT Random\n', theta_rand, x_n, y_n);
             %assign to the inputs array variables 
             inputs.x_g = x_n;
             obj.goal(1) = x_n;
@@ -550,7 +550,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             theta_rand = randi([theta_deg-90, theta_deg+90],1,1);
             x_n = x+0.25*cos(theta_rand*pi/180);
             y_n = y+0.25*sin(theta_rand*pi/180);
-%             fprintf('random theta = %d\n', theta_rand);
+            fprintf('random theta = %d, x_n = %f, y_n = %f\n', theta_rand, x_n, y_n);
             %assign to the inputs array variables 
             inputs.x_g = x_n;
             obj.goal(1) = x_n;

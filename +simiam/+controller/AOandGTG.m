@@ -75,6 +75,13 @@ classdef AOandGTG < simiam.controller.Controller
             u_ao = sum(u_i,2);
             
             % 2. Compute the heading vector for go-to-goal
+            
+%               i. Compute appropriate angle range for random run
+%               ii. if (any dangers && timestep percentage permits)
+%               iii. x_g = randi([min, max], 1, 1)
+%                    y_g = randi([min, max], 1, 1)
+%               iv. else compute x_g and y_g normally
+                                  
             x_g = inputs.x_g;
             y_g = inputs.y_g;
             u_gtg = [x_g-x; y_g-y];
