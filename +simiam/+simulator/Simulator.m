@@ -76,6 +76,7 @@ classdef Simulator < handle
             for k = 1:nRobots
                 robot_s = obj.world.robots.elementAt(k);
 %                 putvar(robot_s);
+
                 if (strcmp(obj.origin, 'hardware'))
                     pose_k_1 = robot_s.robot.update_state_from_hardware(robot_s.pose, split);
                     [x, y, theta] = pose_k_1.unpack();

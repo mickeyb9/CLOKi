@@ -10,6 +10,7 @@ classdef Surface2D < handle
         geometric_span_
         edge_set_
         depth_
+        catchCircle_
     end
     
     properties (Access = private)
@@ -43,6 +44,11 @@ classdef Surface2D < handle
             obj.geometric_span_ = 2*max(sqrt((obj.geometry_(:,1)-obj.centroid_(1)).^2+(obj.geometry_(:,2)-obj.centroid_(2)).^2));
             
             obj.edge_set_ = [obj.geometry_(:,1:2) obj.geometry_([2:n,1],1:2)];
+            
+            % always initialize to not catchCircle, and then will change
+            % later
+            obj.catchCircle_ = 0;
+            
         end
         
         function transform_surface(obj, T)
@@ -111,6 +117,10 @@ classdef Surface2D < handle
             is_in_segment = (u_a >= 0) & (u_a <= 1) & (u_b >= 0) & (u_b <= 1);
 
             points = [intersect_set_x(is_in_segment) intersect_set_y(is_in_segment)];
+        end
+        
+        function set_catch_circle(obj, val)
+            obj.catchCircle_ = val;
         end
     
 %         function points = intersection_with_surface(obj, surface, is_cursory)

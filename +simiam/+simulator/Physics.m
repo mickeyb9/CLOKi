@@ -45,13 +45,26 @@ classdef Physics < handle
                     body_o_s = obstacle.surfaces.head_.key_;
                     
                     if(body_r_s.precheck_surface(body_o_s))
+                        %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        % I don't want this line to run IF it's the catch
+                        % circle. or it can return 0
                         pts = body_r_s.intersection_with_surface(body_o_s, true);
 %                         bool = (pts.size_ > 0);
                         bool = (size(pts,1) > 0);
+                        
+                        % the catchCircle should not intersect with
+                        % obstacles
+                        if body_r_s.catchCircle_
+                            bool = 0;
+                        end 
+                            
                         if (bool)
                             fprintf('COLLISION!\n');
                             return;
                         end
+                        
+                        
+                        
                     end
                     token_l = token_l.next_;
                 end
@@ -69,8 +82,13 @@ classdef Physics < handle
                             pts = body_r_s.intersection_with_surface(body_o_s, true);
 %                             bool = (pts.size_ > 0);
                             bool = (size(pts,1) > 0);
+                            
                             if (bool)
-                                fprintf('COLLISION!\n');
+                                if body_r_s.catchCircle_ || body_o_s.catchCircle_
+                                    fprintf('CAUGHT!!!\n')
+                                else
+                                    fprintf('COLLISION!\n');
+                                end
                                 return;
                             end
                         end
@@ -113,10 +131,16 @@ classdef Physics < handle
 %                         robot_o = token_l.key_.robot;
                         robot_o = obj.world.robots.elementAt(l).robot;
                         if(robot_o ~= robot)
-                            body_o_s = robot_o.surfaces.head_.key_;
                             
-                            if(body_ir_s.precheck_surface(body_o_s))
-                                d_min = obj.update_proximity_sensor(ir, body_ir_s, body_o_s, d_min);
+                            
+                            token = robot_o.surfaces.head_;
+                            while (~isempty(token))
+                                body_o_s = token.key_;
+
+                                if(body_ir_s.precheck_surface(body_o_s) && ~body_o_s.catchCircle_)
+                                    d_min = obj.update_proximity_sensor(ir, body_ir_s, body_o_s, d_min);
+                                end
+                                token = token.next_;
                             end
                         end
 %                         token_l = token_l.next_;
@@ -149,6 +173,7 @@ classdef Physics < handle
                         obstacle = token_l.key_.obstacle;
                         body_o_s = obstacle.surfaces.head_.key_;
                         
+                        
                         if(body_camera_s.precheck_surface(body_o_s))
                             d_min = obj.update_camera_sensor(camera, body_camera_s, body_o_s, d_min);
                         end
@@ -157,7 +182,9 @@ classdef Physics < handle
                     camera.update_range(d_min); % checking against other robots
                     
 
-                    % check against other robots
+                    % check against other robots. there's an approximation
+                    % here that the head_ of the robot will encompass the
+                    % entire body.
 %                     token_l = obj.world.robots.head_;
 %                     while (~isempty(token_l))
                     camera.danger = 0;
@@ -165,14 +192,19 @@ classdef Physics < handle
 %                         robot_o = token_l.key_.robot;
                         robot_o = obj.world.robots.elementAt(l).robot;
                         if(robot_o ~= robot)
-                            body_o_s = robot_o.surfaces.head_.key_;
                             
-                            if(body_camera_s.precheck_surface(body_o_s))
-                                d = obj.update_camera_sensor(camera, body_camera_s, body_o_s, d_min);
-                                if (d < d_min)
-                                    d_min = d;
-                                    camera.danger = 1;
+                            
+                            token = robot_o.surfaces.head_;
+                            while (~isempty(token))
+                                body_o_s = token.key_;
+                                if(body_camera_s.precheck_surface(body_o_s) && ~body_o_s.catchCircle_)
+                                    d = obj.update_camera_sensor(camera, body_camera_s, body_o_s, d_min);
+                                    if (d < d_min)
+                                        d_min = d;
+                                        camera.danger = 1;
+                                    end
                                 end
+                                token = token.next_;
                             end
                         end
 %                         token_l = token_l.next_;

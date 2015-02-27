@@ -494,7 +494,6 @@ classdef QBSupervisor < simiam.controller.Supervisor
                 R = obj.get_transformation_matrix(x_s,y_s,theta_s);
                 dangers_rf(:,i) = R*[dangers(i); 0; dangers(i)];
             end
-            
             % 2. Apply the transformation to world frame.
             
             [x,y,theta] = state_estimate.unpack();
@@ -503,22 +502,18 @@ classdef QBSupervisor < simiam.controller.Supervisor
             dangers_wf = R*dangers_rf;
             
             dangers_wf = dangers_wf(1:2,:);    %just x,y
-            
             %create run away vector
             u_i = (dangers_wf-repmat([x;y],1,nSensors));
             u_dangers = sum(u_i,2);
-            
-            theta = atan2(u_dangers(2),u_dangers(1));
-            
+            theta = atan2(u_dangers(2),u_dangers(1))+(180*pi/180);
             %set carrot for runaway
             x_n = x+0.25*cos(theta);
             y_n = y+0.25*sin(theta);
-            
             %assign to the inputs array variables 
-            inputs.x_g = -x_n;
-            obj.goal(1) = -x_n;
-            inputs.y_g = -y_n;
-            obj.goal(2) = -y_n;
+            inputs.x_g = x_n;
+            obj.goal(1) = x_n;
+            inputs.y_g = y_n;
+            obj.goal(2) = y_n;
         end
         
         %Create Transformation matrix for moving between WorldFrame and
