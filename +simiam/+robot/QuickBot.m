@@ -196,22 +196,22 @@ classdef QuickBot < simiam.robot.Robot
             
             % Added camera sensors
             camera_pose = Pose2D(-0.055, 0.056, Pose2D.deg2rad(120));
-            obj.camera_array(1) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 2, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
+            obj.camera_array(1) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 1, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
             
             camera_pose = Pose2D(-0.067, 0.048, Pose2D.deg2rad(146));
-            obj.camera_array(2) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 2, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
+            obj.camera_array(2) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 1, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
             
             camera_pose = Pose2D(-0.074, 0.035, Pose2D.deg2rad(172));
-            obj.camera_array(3) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 2, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
+            obj.camera_array(3) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 1, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
             
             camera_pose = Pose2D(-0.074, -0.035, Pose2D.deg2rad(-172));
-            obj.camera_array(4) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 2, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
+            obj.camera_array(4) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 1, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
             
             camera_pose = Pose2D(-0.067, -0.048, Pose2D.deg2rad(-146));
-            obj.camera_array(5) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 2, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
+            obj.camera_array(5) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 1, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
             
             camera_pose = Pose2D(-0.055, -0.056, Pose2D.deg2rad(-120));
-            obj.camera_array(6) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 2, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
+            obj.camera_array(6) = CameraSensor(parent, 'CAM', pose, camera_pose, 0.02, 1, Pose2D.deg2rad(20), 'simiam.robot.QuickBot.ir_distance_to_raw', noise_model);
             
             % Add dynamics: two-wheel differential drive
             obj.dynamics = simiam.robot.dynamics.DifferentialDrive(obj.wheel_radius, obj.wheel_base_length);
