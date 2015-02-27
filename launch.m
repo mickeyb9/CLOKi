@@ -41,7 +41,7 @@ for i = 1:2
     app.simulator_.world.robots.elementAt(1).supervisor.set_percent_random(.1);
     
     % set clockys sensor gains
-    gains = [1 1 1 1 1];
+    gains = [1 2 3 2 1];
     app.simulator_.world.robots.elementAt(1).supervisor.controllers{5}.set_sensor_gains(gains);
     
     

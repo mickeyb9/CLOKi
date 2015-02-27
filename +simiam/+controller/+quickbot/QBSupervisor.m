@@ -55,7 +55,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
     methods
     %% METHODS
         
-        function obj = QBSupervisor()
+        function obj = QBSupervisor(pose)
         %% SUPERVISOR Constructor
             obj = obj@simiam.controller.Supervisor();
             
@@ -106,7 +106,7 @@ classdef QBSupervisor < simiam.controller.Supervisor
             
             %% START CODE BLOCK %%
             obj.v           = 0.15;
-            obj.goal        = [0,0];
+            obj.goal        = [pose.x,pose.y];
             obj.d_stop      = 0.05;
             obj.d_at_obs    = 0.10;                
             obj.d_unsafe    = 0.05;

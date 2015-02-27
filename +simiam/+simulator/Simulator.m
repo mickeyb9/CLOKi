@@ -53,8 +53,8 @@ classdef Simulator < handle
             obj.world = world;
             obj.physics = simiam.simulator.Physics(world);
             obj.origin = origin;
-            obj.clockyRec = zeros(1000, 2);
-            obj.humanRec = zeros(1000, 2);
+            obj.clockyRec = zeros(10000, 2);
+            obj.humanRec = zeros(10000, 2);
         end
         
         function step(obj, src, event)

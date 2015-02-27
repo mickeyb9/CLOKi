@@ -12,7 +12,7 @@
     </robot>
     
     <obstacle>
-        <pose x="-0.4" y="0.2" theta="0" />
+        <pose x="-0.4" y="0.2" theta="3.14159" />
         <geometry>
             <point x="0" y="0" />
             <point x="0.8" y="0" />
