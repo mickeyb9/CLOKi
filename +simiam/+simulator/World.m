@@ -98,7 +98,7 @@ classdef World < handle
             robot = r(obj.parent, pose);
             
             r = str2func(strcat('simiam.controller.', spv));
-            supervisor = r();
+            supervisor = r(pose);
             
             supervisor.attach_robot(robot, pose);
             

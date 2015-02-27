@@ -40,7 +40,7 @@ classdef Khepera3 < simiam.robot.Robot
            % once drawn it will behave like a normal collision.
            % that will be a problem with normal objects.
            pts = 36;
-           R = .2;
+           R = .25;
            k3_catch_circle = zeros(pts, 3);
                           
            for i = 1:pts               

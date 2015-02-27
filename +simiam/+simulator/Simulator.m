@@ -25,6 +25,9 @@ classdef Simulator < handle
         world           % A virtual world for the simulator
         physics
         
+        clockyRec       % I made variables to track position
+        humanRec
+        
         origin
     end
     
@@ -50,6 +53,8 @@ classdef Simulator < handle
             obj.world = world;
             obj.physics = simiam.simulator.Physics(world);
             obj.origin = origin;
+            obj.clockyRec = zeros(10000, 2);
+            obj.humanRec = zeros(10000, 2);
         end
         
         function step(obj, src, event)
@@ -70,6 +75,8 @@ classdef Simulator < handle
             nRobots = length(obj.world.robots);
             for k = 1:nRobots
                 robot_s = obj.world.robots.elementAt(k);
+%                 putvar(robot_s);
+
                 if (strcmp(obj.origin, 'hardware'))
                     pose_k_1 = robot_s.robot.update_state_from_hardware(robot_s.pose, split);
                     [x, y, theta] = pose_k_1.unpack();
@@ -78,6 +85,12 @@ classdef Simulator < handle
                 end
                 robot_s.pose.set_pose([x, y, theta]);
 %                 fprintf('current_pose: (%0.3f,%0.3f,%0.3f)\n', x, y, theta);
+                
+                if k == 1 % clocky
+                    obj.clockyRec(get(obj.clock, 'TasksExecuted'), :) = [x, y];
+                elseif k == 2 % human
+                    obj.humanRec(get(obj.clock, 'TasksExecuted'), :) = [x, y];
+                end
                 
                 robot_s.supervisor.execute(split);
             end
